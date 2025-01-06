@@ -1,84 +1,117 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import {
-  TreePalmIcon as PalmTree,
-  DollarSign,
-  Plane,
-  GlassWater,
-  Home,
-  Users,
-} from "lucide-react";
-import { useState } from "react";
+  AI_PROMPT,
+  budgetOptions,
+  companionOptions,
+} from "../constants/option";
+import { useEffect, useState } from "react";
+// import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { chatSession } from "@/service/AIModel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import { FcGoogle } from "react-icons/fc";
+import { Plane } from "lucide-react";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/service/firebaseConfig";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
-const destinations = [
-  "Paris, France",
-  "Tokyo, Japan",
-  "New York, USA",
-  "Rome, Italy",
-  "Barcelona, Spain",
-  "Dubai, UAE",
-  "Sydney, Australia",
-];
-
-const budgetOptions = [
-  {
-    id: "cheap",
-    title: "Cheap",
-    description: "Stay conscious of costs",
-    icon: <DollarSign className="w-8 h-8 text-yellow-950" />,
-  },
-  {
-    id: "moderate",
-    title: "Moderate",
-    description: "Keep cost on the average side",
-    icon: <DollarSign className="w-8 h-8 text-zinc-500" />,
-  },
-  {
-    id: "luxury",
-    title: "Luxury",
-    description: "Don't worry about cost",
-    icon: <DollarSign className="w-8 h-8 text-amber-600" />,
-  },
-];
-
-const companionOptions = [
-  {
-    id: "solo",
-    title: "Just Me",
-    description: "Solo adventure",
-    icon: <Plane className="w-8 h-8 text-blue-500" />,
-  },
-  {
-    id: "couple",
-    title: "A Couple",
-    description: "Romantic getaway",
-    icon: <GlassWater className="w-8 h-8 text-pink-500" />,
-  },
-  {
-    id: "family",
-    title: "Family",
-    description: "Family vacation",
-    icon: <Home className="w-8 h-8 text-purple-500" />,
-  },
-  {
-    id: "friend",
-    title: "Friend",
-    description: "Friends vacation",
-    icon: <Users className="w-8 h-8 text-red-500" />,
-  },
-];
 export default function CreateTrip() {
-  const [selectedBudget, setSelectedBudget] = useState("");
-  const [selectedCompanion, setSelectedCompanion] = useState("");
+  const [place, setPlace] = useState("");
+  const [formData, setFormData] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const handleFormChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
+  const login = useGoogleLogin({
+    onSuccess: (codeResp) => getUserProfile(codeResp),
+    onError: (error) => console.log(error),
+  });
+
+  const GeneratePlan = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      setOpenDialog(true);
+      return;
+    }
+    setLoading(true);
+    if (
+      !formData?.location ||
+      !formData?.noOfDays ||
+      !formData?.budget ||
+      !formData?.Traveler
+    ) {
+      toast("Please fill all details");
+      return;
+    }
+    const FINAL_PROMPT = AI_PROMPT.replace(
+      "{location}",
+      formData?.location?.label
+    )
+      .replace("{totalDays}", formData?.noOfDays)
+      .replace("{budget} ", formData?.budget)
+      .replace("{traveler}", formData?.Traveler)
+      .replace("{totalDays}", formData?.noOfDays);
+
+    console.log(FINAL_PROMPT);
+    const result = await chatSession.sendMessage(FINAL_PROMPT);
+    SaveAiTrip(result?.response?.text());
+    setLoading(false);
+    console.log(result?.response?.text());
+  };
+
+  const SaveAiTrip = async (TripDate) => {
+    setLoading(true);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const docId = Date.now().toString();
+    await setDoc(doc(db, "AITrip", docId), {
+      userSelection: formData,
+      tripDate: JSON.parse(TripDate),
+      userEmail: user?.email,
+      id: docId,
+    });
+    setLoading(false);
+    navigate('/view-trip/'+docId)
+  };
+  const getUserProfile = async (tokneInfo) => {
+    try {
+      const response = await axios.get(
+        "https://www.googleapis.com/oauth2/v1/userinfo",
+        {
+          headers: {
+            Authorization: `Bearer ${tokneInfo?.access_token}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log(response.data); // User info
+      localStorage.setItem(`user`, JSON.stringify(response.data));
+      setOpenDialog(false);
+      GeneratePlan();
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
   return (
     <div className="container max-w-4xl mx-auto py-12 px-4 mt-20">
       <div className="space-y-8">
@@ -94,53 +127,65 @@ export default function CreateTrip() {
             generate a customized itinerary based on your preferences.
           </p>
         </div>
-
         <div className="space-y-6">
+          {/* destination */}
           <div className="space-y-2">
             <label htmlFor="destination" className="text-lg font-semibold">
               What is destination of choice?
             </label>
             <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select..." />
-              </SelectTrigger>
-              <SelectContent>
-                {destinations.map((destination) => (
-                  <SelectItem key={destination} value={destination}>
-                    {destination}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              <GooglePlacesAutocomplete
+                apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
+                selectProps={{
+                  place,
+                  onChange: (v) => {
+                    setPlace(v);
+                    handleFormChange("location", v);
+                  },
+                }}
+              />
             </Select>
           </div>
-
+          {/* days */}
           <div className="space-y-2">
             <label htmlFor="days" className="text-lg font-semibold">
               How many days are you planning your trip?
             </label>
             <Input
               id="days"
-              placeholder="Ex: 3"
+              placeholder="Ex: 3  (max: 5 days)"
               type="number"
+              max="5"
               min="1"
               className="max-w-[200px]"
+              onChange={(e) => {
+                const value = e.target.value;
+                if (
+                  value === "1" ||
+                  (Number(value) >= 1 && Number(value) <= 5)
+                ) {
+                  handleFormChange("noOfDays", value);
+                }
+              }}
             />
           </div>
-
+          {/* Budget */}
           <div className="space-y-4">
             <label className="text-lg font-semibold">
-              What is Your Budget?
+              What is Your Budget? 💸
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {budgetOptions.map((option) => (
                 <Card
                   key={option.id}
                   className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedBudget === option.id
+                    formData?.budget === option.id
                       ? "border-2 border-primary"
                       : "border border-gray-200"
                   }`}
-                  onClick={() => setSelectedBudget(option.id)}
+                  onClick={() => {
+                    handleFormChange("budget", option.id);
+                  }}
                 >
                   <div className="flex flex-col items-center text-center space-y-2">
                     {option.icon}
@@ -153,7 +198,7 @@ export default function CreateTrip() {
               ))}
             </div>
           </div>
-
+          {/* traveler */}
           <div className="space-y-4">
             <label className="text-lg font-semibold">
               Who do you plan on traveling with on your next adventure?
@@ -163,11 +208,13 @@ export default function CreateTrip() {
                 <Card
                   key={option.id}
                   className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedCompanion === option.id
+                    formData?.Traveler === option.people
                       ? "border-2 border-primary"
                       : "border border-gray-200"
                   }`}
-                  onClick={() => setSelectedCompanion(option.id)}
+                  onClick={() => {
+                    handleFormChange("Traveler", option.people);
+                  }}
                 >
                   <div className="flex flex-col items-center text-center space-y-2">
                     {option.icon}
@@ -181,9 +228,43 @@ export default function CreateTrip() {
             </div>
           </div>
 
-          <Button size="lg" className="w-full md:w-auto">
-            Generate Trip
+          <Button
+            disabled={loading}
+            size="lg"
+            className="w-full md:w-auto"
+            onClick={() => GeneratePlan()}
+          >
+            {loading ? (
+              <AiOutlineLoading3Quarters className="w7 h-7 animate-spin" />
+            ) : (
+              "Generate Trip"
+            )}
           </Button>
+          <Dialog open={openDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogDescription>
+                  <div className="flex items-center space-x-2 text-black border-b-2">
+                    <Plane className="h-6 w-6 " />
+                    <span className="text-xl font-medium text-black p-2">
+                      AI Trip Planner
+                    </span>
+                  </div>
+                  <h2 className="font-bold text-lg mt-5">
+                    Sign In with Google
+                  </h2>
+                  <p>Sign In to App with Google Authentication Security </p>
+                  <Button
+                    className="w-full mt-5 gap-4 items-center"
+                    onClick={login}
+                  >
+                    <FcGoogle className="w-7 h-7" />
+                    Sign In with Google
+                  </Button>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

@@ -1,15 +1,14 @@
 import { Button } from "../ui/button";
-import { Map, Calendar, Clock,Compass } from "lucide-react";
-import CreateTrip from "@/create-trip";
+import { Map, Calendar, Clock, Compass } from "lucide-react";
+// import CreateTrip from "@/create-trip";
 import { Link } from "react-router-dom";
+import { FaGithub } from "react-icons/fa";
 
 export default function Hero() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Full screen hero section with nav */}
       <div className="h-screen flex flex-col relative">
-
-
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight max-w-4xl mb-6">
             Plan{" "}
@@ -23,10 +22,10 @@ export default function Hero() {
             The ultimate AI travel companion for crafting your perfect journey,
             powered by advanced artificial intelligence
           </p>
-          <Link to={'/create-trip'}>
-          <Button className="h-14 px-8 text-lg rounded-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" >
-            Try TripAI
-          </Button>
+          <Link to={"/create-trip"}>
+            <Button className="h-14 px-8 text-lg rounded-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+              Try TripAI
+            </Button>
           </Link>
         </div>
 
@@ -115,9 +114,11 @@ export default function Hero() {
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
             Join thousands of travelers who plan smarter, not harder with TripAI
           </p>
-          <Button className="h-14 px-8 text-lg rounded-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
-            Start Planning Now
-          </Button>
+          <Link to={"/create-trip"}>
+            <Button className="h-14 px-8 text-lg rounded-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+              Start Planning Now
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -128,16 +129,18 @@ export default function Hero() {
           </p>
           <div className="flex space-x-6">
             <a
-              href="/privacy"
-              className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+              href="https://nikhilwagh.vercel.app/"
+              target="_blank"
+              className="text-sm text-gray-600 hover:text-red-950 dark:text-gray-400 dark:hover:text-gray-100"
             >
-              Privacy
+              My Portfolio Site
             </a>
             <a
-              href="/terms"
-              className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+              target="_blank"
+              href="https://github.com/nikhil-wg"
+              className="text-xl text-black hover:text-red-950"
             >
-              Terms
+              <FaGithub />
             </a>
           </div>
         </div>
