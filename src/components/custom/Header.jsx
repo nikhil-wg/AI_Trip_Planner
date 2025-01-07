@@ -59,9 +59,11 @@ export default function Header() {
         <div className="flex items-center space-x-8">
           {user ? (
             <div className="flex items-center gap-5">
-              <Button variant="outline" className="rounded-full">
-                My Trip
-              </Button>
+              <a href="/my-trip">
+                <Button variant="outline" className="rounded-full">
+                  My Trip
+                </Button>
+              </a>
               <a href="/create-trip">
                 <Button variant="outline" className="rounded-full">
                   + Create Plan

@@ -1,6 +1,6 @@
 
 export default function MyTrip() {
   return (
-    <div>MyTrip</div>
+    <div className="text-7xl mt-28 m-12 ">Coming Soon......</div>
   )
 }
