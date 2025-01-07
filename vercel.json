@@ -1,0 +1,21 @@
+{
+    "rewrites": [
+      {
+        "source": "/create-trip",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/view-trip/:tripId",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/my-trip",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/:path*",
+        "destination": "/index.html"
+      }
+    ]
+  }
+  
