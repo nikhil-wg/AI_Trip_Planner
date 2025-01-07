@@ -23,7 +23,6 @@ export default function Header() {
   const login = useGoogleLogin({
     onSuccess: (codeResp) => getUserProfile(codeResp),
     onError: (error) => console.log(error),
-    
   });
 
   const getUserProfile = async (tokenInfo) => {
@@ -40,7 +39,6 @@ export default function Header() {
 
       localStorage.setItem(`user`, JSON.stringify(response.data));
       setOpenDialog(false);
-      
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
@@ -64,9 +62,11 @@ export default function Header() {
               <Button variant="outline" className="rounded-full">
                 My Trip
               </Button>
-              <Button variant="outline" className="rounded-full">
-                + Create Plan
-              </Button>
+              <a href="/create-trip">
+                <Button variant="outline" className="rounded-full">
+                  + Create Plan
+                </Button>
+              </a>
 
               <Popover>
                 <PopoverTrigger>
@@ -111,7 +111,6 @@ export default function Header() {
                     className="w-full mt-5 gap-4 items-center"
                     onClick={() => {
                       login();
-                      
                     }}
                   >
                     <FcGoogle className="w-7 h-7" />
