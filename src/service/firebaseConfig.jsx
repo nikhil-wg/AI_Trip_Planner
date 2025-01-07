@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAlekeARMheIEyR-3wXUYQqBXH9Zo9Onj4",
+  apiKey: import.meta.env.VITE_GOOGLE_FIREBASE_API_KEY,
   authDomain: "ai-trip-planner-7674e.firebaseapp.com",
   projectId: "ai-trip-planner-7674e",
   storageBucket: "ai-trip-planner-7674e.firebasestorage.app",
