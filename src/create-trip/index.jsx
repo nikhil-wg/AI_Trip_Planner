@@ -8,7 +8,7 @@ import {
   budgetOptions,
   companionOptions,
 } from "../constants/option";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 // import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { chatSession } from "@/service/AIModel";
@@ -39,9 +39,7 @@ export default function CreateTrip() {
       [name]: value,
     });
   };
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  
 
   const login = useGoogleLogin({
     onSuccess: (codeResp) => getUserProfile(codeResp),
@@ -73,11 +71,11 @@ export default function CreateTrip() {
       .replace("{traveler}", formData?.Traveler)
       .replace("{totalDays}", formData?.noOfDays);
 
-    console.log(FINAL_PROMPT);
+    
     const result = await chatSession.sendMessage(FINAL_PROMPT);
     SaveAiTrip(result?.response?.text());
     setLoading(false);
-    console.log(result?.response?.text());
+    
   };
 
   const SaveAiTrip = async (TripDate) => {
@@ -104,7 +102,7 @@ export default function CreateTrip() {
           },
         }
       );
-      console.log(response.data); // User info
+     
       localStorage.setItem(`user`, JSON.stringify(response.data));
       setOpenDialog(false);
       window.location.reload();

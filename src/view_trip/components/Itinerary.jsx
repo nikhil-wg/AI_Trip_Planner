@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Button } from "@/components/ui/button";
-import { GrMapLocation } from "react-icons/gr";
+// import { Button } from "@/components/ui/button";
+// import { GrMapLocation } from "react-icons/gr";
 export default function Itinerary({ trip }) {
   // Get the itinerary object
   const itinerary = trip?.tripDate?.itinerary || {};
@@ -26,6 +26,7 @@ export default function Itinerary({ trip }) {
               {details.places.map((place, i) => (
                 <div key={i} className="flex-1 min-w-full sm:min-w-[48%] md:min-w-[31%] lg:min-w-[30%] p-3 hover:scale-95 transition-all cursor-pointer border rounded-lg shadow-sm">
                   <Link
+                    // eslint-disable-next-line react/prop-types
                     to={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.placeName)} ${encodeURIComponent(trip?.tripDate?.tripDetails?.location)}`}
                     target="_blank"
                     className=""

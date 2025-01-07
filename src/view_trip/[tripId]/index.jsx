@@ -19,7 +19,7 @@ export default function ViewTrip() {
         const docRef = doc(db, "AITrip", tripId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log("document", docSnap.data());
+          console.log("trip plan is created");
           setTrip(docSnap.data());
         } else {
           console.log("trip data is not found");

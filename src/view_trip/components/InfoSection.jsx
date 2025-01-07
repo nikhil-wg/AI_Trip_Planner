@@ -3,8 +3,7 @@ import { Calendar, DollarSign, Users } from "lucide-react";
 import { LuSend } from "react-icons/lu";
 // eslint-disable-next-line react/prop-types
 export default function InfoSection({ trip }) {
-  console.log("Trip data:", trip);
-
+  
   return (
     <>
       <div className="mt-20">

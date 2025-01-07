@@ -2,9 +2,8 @@ import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
 export default function HotalRecommend({ trip }) {
-  console.log(trip);
+  
   return (
     <div>
       <h1 className=" text-2xl font-bold text mb-5">Hotel Recommendation</h1>
