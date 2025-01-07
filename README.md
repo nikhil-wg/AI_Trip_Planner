@@ -32,7 +32,7 @@ AI Trip Planner is an AI-powered web application for generating personalized tra
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/nikhil-wg/ai-trip-planner.git
+   git clone https://github.com/nikhil-wg/AI_Trip_Planner.git
    ```
 
 2. Navigate to the project directory:
