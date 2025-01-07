@@ -31,7 +31,7 @@ export default function Itinerary({ trip }) {
                     className=""
                   >
                     <img
-                      src="/temp.jpg"
+                      src="/plan.jpg"
                       alt={place.placeName || "Place Image Not Found"}
                       className="rounded-xl w-full h-48 object-cover"
                     />

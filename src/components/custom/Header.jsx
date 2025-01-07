@@ -64,6 +64,9 @@ export default function Header() {
               <Button variant="outline" className="rounded-full">
                 My Trip
               </Button>
+              <Button variant="outline" className="rounded-full">
+                + Create Plan
+              </Button>
 
               <Popover>
                 <PopoverTrigger>

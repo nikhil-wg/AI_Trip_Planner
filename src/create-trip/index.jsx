@@ -107,6 +107,7 @@ export default function CreateTrip() {
       console.log(response.data); // User info
       localStorage.setItem(`user`, JSON.stringify(response.data));
       setOpenDialog(false);
+      window.location.reload();
       GeneratePlan();
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -232,15 +233,18 @@ export default function CreateTrip() {
             disabled={loading}
             size="lg"
             className="w-full md:w-auto"
-            onClick={() => GeneratePlan()}
+            onClick={() => {GeneratePlan()
+              toast("Creating Your Plan Please wait....");
+            }}
           >
             {loading ? (
               <AiOutlineLoading3Quarters className="w7 h-7 animate-spin" />
+              
             ) : (
               "Generate Trip"
             )}
           </Button>
-          <Dialog open={openDialog}>
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogContent>
               <DialogHeader>
                 <DialogDescription>
