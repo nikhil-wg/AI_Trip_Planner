@@ -9,7 +9,7 @@ export default function Hero() {
     <div className="min-h-screen flex flex-col">
       {/* Full screen hero section with nav */}
       <div className="h-screen flex flex-col relative">
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
+        <div className=" flex-1 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight max-w-4xl mb-6">
             Plan{" "}
             <span className="bg-gradient-to-r from-emerald-400 via-sky-400 to-blue-500 text-transparent bg-clip-text">
@@ -45,7 +45,7 @@ export default function Hero() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <FeatureCard
               icon={<Map className="h-8 w-8" />}
-              title="Smart Itineraries"
+              title="Smart Itineraries" 
               description="AI-powered trip planning that adapts to your preferences and travel style"
             />
             <FeatureCard

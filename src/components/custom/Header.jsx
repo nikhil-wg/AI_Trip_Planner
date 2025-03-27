@@ -36,7 +36,7 @@ export default function Header() {
           },
         }
       );
-
+console.log(response.data)
       localStorage.setItem(`user`, JSON.stringify(response.data));
       setOpenDialog(false);
     } catch (error) {
